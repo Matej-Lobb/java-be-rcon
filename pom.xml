@@ -9,6 +9,14 @@
     <version>1.0-SNAPSHOT</version>
 
     <name>BATTLEYE RCON LIBRARY</name>
+         
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>mlobb/java-be-rcon</distribution>
+        </license>
+    </licenses>
 
     <developers>
         <developer>
@@ -41,7 +49,7 @@
     </ciManagement>
 
     <properties>
-    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>11</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
