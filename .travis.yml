@@ -5,11 +5,11 @@ addons:
   sonarcloud:
     organization: "mlobb"
     token:
-      secure: "0c0e2f825f6cbaad17753084e82021a838e40574"
+      secure: "6ec5e6e76be7384dd86fed0fef2ccd5ab45dc35f"
 
 cache:
   directories:
     - "$HOME/.m2"
 
 script:
-  - "mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=mlobb_java-be-rcon"
+  - mvn clean install sonar:sonar -Pcoverage
