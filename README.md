@@ -1,1 +1,1 @@
-# be-server-rcon
+# JAVA Library for Battleye rcon server.
