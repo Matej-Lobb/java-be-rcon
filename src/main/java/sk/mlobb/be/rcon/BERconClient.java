@@ -2,14 +2,17 @@ package sk.mlobb.be.rcon;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import sk.mlobb.be.rcon.handler.ConnectionHandler;
+import sk.mlobb.be.rcon.handler.ResponseHandler;
 import sk.mlobb.be.rcon.model.BECommand;
 import sk.mlobb.be.rcon.model.BELoginCredential;
+import sk.mlobb.be.rcon.model.command.BECommandType;
 import sk.mlobb.be.rcon.model.configuration.BERconConfiguration;
-import sk.mlobb.be.rcon.model.enums.BECommandType;
 import sk.mlobb.be.rcon.model.enums.BEConnectType;
 import sk.mlobb.be.rcon.model.enums.BEDisconnectType;
 import sk.mlobb.be.rcon.model.enums.BEMessageType;
 import sk.mlobb.be.rcon.model.exception.BERconException;
+import sk.mlobb.be.rcon.wrapper.DatagramChannelWrapper;
 
 import java.io.IOException;
 import java.net.StandardSocketOptions;
@@ -26,6 +29,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.zip.CRC32;
 
+/**
+ * The type BattlEye Rcon client.
+ */
 @Slf4j
 public class BERconClient {
 
@@ -37,10 +43,11 @@ public class BERconClient {
     private Thread receiveThread;
 
     private final List<ConnectionHandler> connectionHandlerList;
-    private final BERconConfiguration dayzYamlConfiguration;
+    private final BERconConfiguration beRconConfiguration;
     private final List<ResponseHandler> responseHandlerList;
     private final CRC32 crc32;
 
+    private DatagramChannelWrapper datagramChannelWrapper;
     private DatagramChannel datagramChannel;
     private Queue<BECommand> commandQueue;
     private AtomicInteger sequenceNumber;
@@ -50,10 +57,12 @@ public class BERconClient {
     private ByteBuffer sendBuffer;
 
     /**
-     * Instantiates a new BattleEye rcon client.
+     * Instantiates a new Be rcon client.
+     *
+     * @param beRconConfiguration the be rcon configuration
      */
-    public BERconClient(BERconConfiguration dayzYamlConfiguration) {
-        this.dayzYamlConfiguration = dayzYamlConfiguration;
+    public BERconClient(BERconConfiguration beRconConfiguration) {
+        this.beRconConfiguration = beRconConfiguration;
         crc32 = new CRC32();
         connected = new AtomicBoolean(false);
         connectionHandlerList = new ArrayList<>();
@@ -62,17 +71,18 @@ public class BERconClient {
         receiveThread.setName("rcdata-1");
         monitorThread = new Thread(getMonitorRunnable());
         monitorThread.setName("rcmonitor-1");
+        datagramChannelWrapper = new DatagramChannelWrapper();
     }
 
     /**
-     * Connect to Rcon.
+     * Connect to BattlEye Rcon.
      *
      * @param beLoginCredential the be login credential
      * @throws IOException the io exception
      */
     public void connect(BELoginCredential beLoginCredential) throws IOException {
         log.info("Connecting to Rcon ...");
-        datagramChannel = DatagramChannel.open();
+        datagramChannel = datagramChannelWrapper.open();
         datagramChannel.connect(beLoginCredential.getHostAddress());
         log.debug("Datagram connected ...");
 
@@ -93,7 +103,6 @@ public class BERconClient {
         log.debug("Starting thread: {}", monitorThread.getName());
         monitorThread.start();
 
-        // Login packet is a bit unique since we want to set -1 as the sequence number
         log.info("Perform login ...");
         constructPacket(BEMessageType.Login, -1, beLoginCredential.getHostPassword());
         sendData();
@@ -102,10 +111,26 @@ public class BERconClient {
     /**
      * Send command.
      *
+     * @param commands the commands
+     */
+    public void sendCommand(String... commands) {
+        final StringBuilder commandBuilder = new StringBuilder();
+        for (String command : commands) {
+            commandBuilder.append(' ');
+            commandBuilder.append(command);
+        }
+
+        addCommandToQueue(new BECommand(BEMessageType.Command, commandBuilder.toString()));
+    }
+
+
+    /**
+     * Send command.
+     *
      * @param commandType the command type
      */
     public void sendCommand(BECommandType commandType) {
-        addCommandToQueue(new BECommand(BEMessageType.Command, commandType.toString()));
+        addCommandToQueue(new BECommand(BEMessageType.Command, commandType.getCommand()));
     }
 
     /**
@@ -115,13 +140,17 @@ public class BERconClient {
      * @param commandArgs the command args
      */
     public void sendCommand(BECommandType commandType, String... commandArgs) {
-        final StringBuilder commandBuilder = new StringBuilder(commandType.toString());
+        final StringBuilder commandBuilder = new StringBuilder(commandType.getCommand());
         for (String arg : commandArgs) {
             commandBuilder.append(' ');
             commandBuilder.append(arg);
         }
         log.debug("Sending command: {}", commandBuilder.toString());
         addCommandToQueue(new BECommand(BEMessageType.Command, commandBuilder.toString()));
+    }
+
+    public void disconnect() {
+        disconnect(BEDisconnectType.MANUAL);
     }
 
     private void disconnect(BEDisconnectType disconnectType) {
@@ -143,7 +172,7 @@ public class BERconClient {
     }
 
     /**
-     * Construct a packet following the BE protocol
+     * Construct a packet following the BattlEye protocol
      * http://www.battleye.com/downloads/BERConProtocol.txt
      */
     private void constructPacket(BEMessageType messageType, int sequenceNumber, String command) {
@@ -176,7 +205,7 @@ public class BERconClient {
             try {
                 datagramChannel.write(sendBuffer);
                 lastSentTime.set(System.currentTimeMillis());
-                Thread.sleep(dayzYamlConfiguration.getConnectionDelay());
+                Thread.sleep(beRconConfiguration.getConnectionDelay());
             } catch (IOException e) {
                 throw new BERconException("Failed to send data !", e);
             } catch (InterruptedException e) {
@@ -235,10 +264,20 @@ public class BERconClient {
         }
     }
 
+    /**
+     * Add connection handler.
+     *
+     * @param connectionHandler the connection handler
+     */
     public void addConnectionHandler(ConnectionHandler connectionHandler) {
         connectionHandlerList.add(connectionHandler);
     }
 
+    /**
+     * Add response handler.
+     *
+     * @param responseHandler the response handler
+     */
     public void addResponseHandler(ResponseHandler responseHandler) {
         responseHandlerList.add(responseHandler);
     }
@@ -299,7 +338,6 @@ public class BERconClient {
     }
 
     private void receiveServerPacket() {
-        //Output the message and send an acknowledgement to the server
         byte serverSequenceNumber = receiveBuffer.get();
         fireResponseEvent(new String(receiveBuffer.array(), receiveBuffer.position(), receiveBuffer.remaining()));
         constructPacket(BEMessageType.Server, serverSequenceNumber, null);
@@ -308,9 +346,7 @@ public class BERconClient {
     }
 
     private void receiveCommandPacket() throws IOException {
-        //Check to see if this message is segmented
         receiveBuffer.get();
-        //Check to prevent BufferUnderFlowException
         if (receiveBuffer.hasRemaining()) {
             if (receiveBuffer.get() == 0x00) {
                 int totalPackets = receiveBuffer.get();
@@ -319,7 +355,6 @@ public class BERconClient {
                 messageArray[packetIndex] = new String(receiveBuffer.array(), receiveBuffer.position(), receiveBuffer.remaining());
                 packetIndex++;
 
-                //Process the remaining segmented messages
                 while (packetIndex < totalPackets) {
                     receiveData();
                     receiveBuffer.position(12);
@@ -347,7 +382,7 @@ public class BERconClient {
             switch (connectionResult) {
                 case Failure:
                     fireConnectionConnectedEvent(BEConnectType.Failure);
-                    disconnect(BEDisconnectType.ConnectionLost);
+                    disconnect(BEDisconnectType.CONNECTION_LOST);
                     break;
                 case Success:
                     fireConnectionConnectedEvent(BEConnectType.Success);
@@ -355,7 +390,7 @@ public class BERconClient {
                     break;
                 case Unknown:
                     fireConnectionConnectedEvent(BEConnectType.Unknown);
-                    disconnect(BEDisconnectType.ConnectionLost);
+                    disconnect(BEDisconnectType.SOCKET_EXCEPTION);
                     break;
                 default:
                     log.warn("Invalid connection result!");
@@ -385,14 +420,14 @@ public class BERconClient {
 
     private void checkTimeout() {
         log.debug("Checking timeout ...");
-        if (lastSentTime.get() - lastReceivedTime.get() > dayzYamlConfiguration.getTimeoutTime()) {
-            disconnect(BEDisconnectType.ConnectionLost);
+        if (lastSentTime.get() - lastReceivedTime.get() > beRconConfiguration.getTimeoutTime()) {
+            disconnect(BEDisconnectType.CONNECTION_LOST);
         }
     }
 
     private void sentKeepAlive() {
         log.debug("Check if keep alive is needed ...");
-        if (System.currentTimeMillis() - lastSentTime.get() >= dayzYamlConfiguration.getKeepAliveTime()) {
+        if (System.currentTimeMillis() - lastSentTime.get() >= beRconConfiguration.getKeepAliveTime()) {
             constructPacket(BEMessageType.Command, nextSequenceNumber(), null);
             sendData();
             log.info("Sent empty packet for keep alive!");

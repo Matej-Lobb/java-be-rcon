@@ -1,9 +1,24 @@
 package sk.mlobb.be.rcon.model.enums;
 
+/**
+ * The enum Be message type.
+ */
 public enum BEMessageType {
+    /**
+     * Login be message type.
+     */
     Login((byte) 0x00),
+    /**
+     * Command be message type.
+     */
     Command((byte) 0x01),
+    /**
+     * Server be message type.
+     */
     Server((byte) 0x02),
+    /**
+     * Unknown be message type.
+     */
     Unknown((byte) 0xFF);
 
     private final byte type;
@@ -12,6 +27,12 @@ public enum BEMessageType {
         this.type = type;
     }
 
+    /**
+     * Convert byte to packet type be message type.
+     *
+     * @param byteToConvert the byte to convert
+     * @return the be message type
+     */
     public static BEMessageType convertByteToPacketType(byte byteToConvert){
         BEMessageType packetType;
         switch (byteToConvert){
@@ -32,6 +53,11 @@ public enum BEMessageType {
         return packetType;
     }
 
+    /**
+     * Gets type.
+     *
+     * @return the type
+     */
     public byte getType() {
         return type;
     }
