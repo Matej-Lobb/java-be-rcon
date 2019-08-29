@@ -57,7 +57,6 @@
         <jacoco-maven-plugin.version>0.8.3</jacoco-maven-plugin.version>
 
         <lombok.version>1.18.8</lombok.version>
-        <slf4j-api.version>1.7.28</slf4j-api.version>
         <junit-jupiter-engine.version>5.1.0</junit-jupiter-engine.version>
         <mockito.version>3.0.0</mockito.version>
         <commons-lang3.version>3.9</commons-lang3.version>
@@ -70,18 +69,6 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
-        </dependency>
-
-        <!-- Log -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j-api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j-api.version}</version>
         </dependency>
 
         <!-- Tests -->

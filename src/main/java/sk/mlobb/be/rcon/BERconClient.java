@@ -1,11 +1,11 @@
 package sk.mlobb.be.rcon;
 
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import sk.mlobb.be.rcon.handler.ConnectionHandler;
 import sk.mlobb.be.rcon.handler.ResponseHandler;
 import sk.mlobb.be.rcon.model.BECommand;
 import sk.mlobb.be.rcon.model.BELoginCredential;
+import sk.mlobb.be.rcon.model.enums.LoggingLevel;
 import sk.mlobb.be.rcon.model.command.BECommandType;
 import sk.mlobb.be.rcon.model.configuration.BERconConfiguration;
 import sk.mlobb.be.rcon.model.enums.BEConnectType;
@@ -13,6 +13,7 @@ import sk.mlobb.be.rcon.model.enums.BEDisconnectType;
 import sk.mlobb.be.rcon.model.enums.BEMessageType;
 import sk.mlobb.be.rcon.model.exception.BERconException;
 import sk.mlobb.be.rcon.wrapper.DatagramChannelWrapper;
+import sk.mlobb.be.rcon.wrapper.LogWrapper;
 
 import java.io.IOException;
 import java.net.StandardSocketOptions;
@@ -32,8 +33,9 @@ import java.util.zip.CRC32;
 /**
  * The type BattlEye Rcon client.
  */
-@Slf4j
 public class BERconClient {
+
+    private final LogWrapper log;
 
     @Getter
     private final AtomicBoolean connected;
@@ -55,14 +57,23 @@ public class BERconClient {
     private ByteBuffer receiveBuffer;
     private AtomicLong lastSentTime;
     private ByteBuffer sendBuffer;
+    private Boolean loggingEnabled = false;
+
+    public BERconClient(BERconConfiguration beRconConfiguration) {
+        this(beRconConfiguration, null);
+    }
 
     /**
      * Instantiates a new Be rcon client.
      *
      * @param beRconConfiguration the be rcon configuration
      */
-    public BERconClient(BERconConfiguration beRconConfiguration) {
+    public BERconClient(BERconConfiguration beRconConfiguration, LogWrapper log) {
         this.beRconConfiguration = beRconConfiguration;
+        this.log = log;
+        if (log != null) {
+            loggingEnabled = true;
+        }
         crc32 = new CRC32();
         connected = new AtomicBoolean(false);
         connectionHandlerList = new ArrayList<>();
@@ -81,10 +92,10 @@ public class BERconClient {
      * @throws IOException the io exception
      */
     public void connect(BELoginCredential beLoginCredential) throws IOException {
-        log.info("Connecting to Rcon ...");
+        logIfEnabled("Connecting to Rcon ...", LoggingLevel.INFO);
         datagramChannel = datagramChannelWrapper.open();
         datagramChannel.connect(beLoginCredential.getHostAddress());
-        log.debug("Datagram connected ...");
+        logIfEnabled("Datagram connected ...", LoggingLevel.DEBUG);
 
         sendBuffer = ByteBuffer.allocate(datagramChannel.getOption(StandardSocketOptions.SO_SNDBUF));
         sendBuffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -98,12 +109,17 @@ public class BERconClient {
         lastReceivedTime = new AtomicLong(System.currentTimeMillis());
         sequenceNumber = new AtomicInteger(-1);
 
-        log.debug("Starting thread: {}", receiveThread.getName());
-        receiveThread.start();
-        log.debug("Starting thread: {}", monitorThread.getName());
-        monitorThread.start();
+        try {
+            logIfEnabled(String.format("Starting thread: %s", receiveThread.getName()), LoggingLevel.DEBUG);
+            receiveThread.start();
+            logIfEnabled(String.format("Starting thread: %s", monitorThread.getName()), LoggingLevel.DEBUG);
+            monitorThread.start();
+        } catch (Exception e) {
+            throw new BERconException(String.format("Failed to receive/monitor BattlEye Rcon! Most probably is not " +
+                    "running in: %s", beLoginCredential.getHostAddress()));
+        }
 
-        log.info("Perform login ...");
+        logIfEnabled("Perform login ...", LoggingLevel.INFO);
         constructPacket(BEMessageType.Login, -1, beLoginCredential.getHostPassword());
         sendData();
     }
@@ -145,7 +161,7 @@ public class BERconClient {
             commandBuilder.append(' ');
             commandBuilder.append(arg);
         }
-        log.debug("Sending command: {}", commandBuilder.toString());
+        logIfEnabled(String.format("Sending command: %s", commandBuilder.toString()), LoggingLevel.DEBUG);
         addCommandToQueue(new BECommand(BEMessageType.Command, commandBuilder.toString()));
     }
 
@@ -155,7 +171,7 @@ public class BERconClient {
 
     private void disconnect(BEDisconnectType disconnectType) {
         try {
-            log.debug("Disconnecting ...");
+            logIfEnabled("Disconnecting ...", LoggingLevel.INFO);
             connected.set(false);
             commandQueue = null;
             datagramChannel.disconnect();
@@ -167,7 +183,7 @@ public class BERconClient {
             receiveBuffer = null;
             fireConnectionDisconnectVent(disconnectType);
         } catch (IOException e) {
-            log.warn("Failed to disconnect !", e);
+            logIfEnabled("Failed to disconnect !", LoggingLevel.WARNING, e);
         }
     }
 
@@ -176,7 +192,7 @@ public class BERconClient {
      * http://www.battleye.com/downloads/BERConProtocol.txt
      */
     private void constructPacket(BEMessageType messageType, int sequenceNumber, String command) {
-        log.debug("Constructing packet ...");
+        logIfEnabled("Constructing packet ...", LoggingLevel.DEBUG);
         sendBuffer.clear();
         sendBuffer.put((byte) 'B');
         sendBuffer.put((byte) 'E');
@@ -200,7 +216,7 @@ public class BERconClient {
     }
 
     private void sendData() {
-        log.debug("Sending data ...");
+        logIfEnabled("Sending data ...", LoggingLevel.DEBUG);
         if (datagramChannel.isConnected()) {
             try {
                 datagramChannel.write(sendBuffer);
@@ -209,14 +225,14 @@ public class BERconClient {
             } catch (IOException e) {
                 throw new BERconException("Failed to send data !", e);
             } catch (InterruptedException e) {
-                log.warn("Interrupted !", e);
+                logIfEnabled("Interrupted !", LoggingLevel.WARNING, e);
                 Thread.currentThread().interrupt();
             }
         }
     }
 
     private void sendNextCommand() {
-        log.debug("Sending next command ...");
+        logIfEnabled("Sending next command ...", LoggingLevel.DEBUG);
         if (commandQueue != null && !commandQueue.isEmpty()) {
             final BECommand beCommand = commandQueue.poll();
             if (beCommand != null) {
@@ -231,7 +247,7 @@ public class BERconClient {
      * 'B'(0x42) | 'E'(0x45) | 4-byte CRC32 checksum of the subsequent bytes | 0xFF
      */
     private boolean receiveData() throws IOException {
-        log.debug("Receiving data ...");
+        logIfEnabled("Receiving data ...", LoggingLevel.DEBUG);
         receiveBuffer.clear();
         int read = datagramChannel.read(receiveBuffer);
         if (read < 7) {
@@ -255,7 +271,7 @@ public class BERconClient {
     }
 
     private void addCommandToQueue(BECommand command) {
-        log.debug("Adding command to queue: {}", command.toString());
+        logIfEnabled(String.format("Adding command to queue: %s", command.toString()), LoggingLevel.DEBUG);
         if (!commandQueue.isEmpty()) {
             commandQueue.add(command);
         } else {
@@ -321,11 +337,11 @@ public class BERconClient {
                             }
                             break;
                             case Unknown: {
-                                log.warn("Received unknown packet!");
+                                logIfEnabled("Received unknown packet!", LoggingLevel.WARNING);
                             }
                             break;
                             default: {
-                                log.info("Unknown packet");
+                                logIfEnabled("Unknown packet", LoggingLevel.WARNING);
                                 break;
                             }
                         }
@@ -393,7 +409,7 @@ public class BERconClient {
                     disconnect(BEDisconnectType.SOCKET_EXCEPTION);
                     break;
                 default:
-                    log.warn("Invalid connection result!");
+                    logIfEnabled("Invalid connection result!", LoggingLevel.WARNING);
                     break;
             }
         } catch (Exception e) {
@@ -406,12 +422,13 @@ public class BERconClient {
             while (datagramChannel.isConnected()) {
                 try {
                     TimeUnit.SECONDS.sleep(1);
-                    log.debug("Last received packet time: {}", lastReceivedTime.get());
-                    log.debug("Last sent packet time: {}", lastSentTime.get());
+                    logIfEnabled(String.format("Last received packet time: %s", lastReceivedTime.get()),
+                            LoggingLevel.DEBUG);
+                    logIfEnabled(String.format("Last sent packet time: %s", lastSentTime.get()), LoggingLevel.DEBUG);
                     checkTimeout();
                     sentKeepAlive();
                 } catch (InterruptedException e) {
-                    log.warn("Interrupted !", e);
+                    logIfEnabled("Interrupted !", LoggingLevel.WARNING, e);
                     Thread.currentThread().interrupt();
                 }
             }
@@ -419,18 +436,51 @@ public class BERconClient {
     }
 
     private void checkTimeout() {
-        log.debug("Checking timeout ...");
+        logIfEnabled("Checking timeout ...", LoggingLevel.DEBUG);
         if (lastSentTime.get() - lastReceivedTime.get() > beRconConfiguration.getTimeoutTime()) {
             disconnect(BEDisconnectType.CONNECTION_LOST);
         }
     }
 
     private void sentKeepAlive() {
-        log.debug("Check if keep alive is needed ...");
+        logIfEnabled("Check if keep alive is needed ...", LoggingLevel.DEBUG);
         if (System.currentTimeMillis() - lastSentTime.get() >= beRconConfiguration.getKeepAliveTime()) {
             constructPacket(BEMessageType.Command, nextSequenceNumber(), null);
             sendData();
-            log.info("Sent empty packet for keep alive!");
+            logIfEnabled("Sent empty packet for keep alive!", LoggingLevel.INFO);
+        }
+    }
+
+    private void logIfEnabled(String message, LoggingLevel level) {
+        logIfEnabled(message, level, null);
+    }
+
+    private void logIfEnabled(String message, LoggingLevel level, Throwable throwable) {
+        if (loggingEnabled) {
+            switch (level) {
+                case DEBUG: {
+                    if (throwable == null) {
+                        log.debug(message);
+                        break;
+                    }
+                    log.debug(message, throwable);
+                    break;
+                }
+                case INFO: {
+                    if (throwable == null) {
+                        log.info(message);
+                        break;
+                    }
+                    log.info(message, throwable);
+                }
+                case WARNING: {
+                    if (throwable == null) {
+                        log.warn(message);
+                        break;
+                    }
+                    log.warn(message, throwable);
+                }
+            }
         }
     }
 }
