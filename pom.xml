@@ -6,7 +6,7 @@
 
     <groupId>sk.mlobb</groupId>
     <artifactId>be-rcon</artifactId>
-    <version>1.0</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <name>BATTLEYE RCON LIBRARY</name>
          
@@ -63,10 +63,11 @@
 
         <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-        <maven-scm-provider-gitexe.version>1.11.2</maven-scm-provider-gitexe.version>
+        <maven-scm-provider-gitexe.version>${maven-scm-api.version}</maven-scm-provider-gitexe.version>
         <maven-source-plugin.version>3.1.0</maven-source-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
+        <maven-scm-api.version>1.11.2</maven-scm-api.version>
     </properties>
 
     <dependencies>
@@ -160,6 +161,11 @@
                         <artifactId>maven-scm-provider-gitexe</artifactId>
                         <version>${maven-scm-provider-gitexe.version}</version>
                     </dependency>
+                    <dependency>
+                        <groupId>org.apache.maven.scm</groupId>
+                        <artifactId>maven-scm-api</artifactId>
+                        <version>${maven-scm-api.version}</version>
+                    </dependency>
                 </dependencies>
             </plugin>
             <plugin>
@@ -204,7 +210,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>${maven-gpg-plugin.version}</version>
+                        <version>1.6</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
