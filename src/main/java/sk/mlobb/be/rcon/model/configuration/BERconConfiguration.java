@@ -10,21 +10,19 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class BERconConfiguration {
 
-    /**
-     * Required
-     */
-    private String ip;
-    private Integer port;
-    private String password;
+    public BERconConfiguration() {
+        this.keepAliveTime = 27000L;
+        this.connectionDelay = 1000L;
+        this.timeoutTime = 10000L;
+    }
 
     /**
      * With Default values
      */
-    private Long keepAliveTime = 27000L;
-    private Long connectionDelay = 1000L;
-    private Long timeoutTime = 10000L;
+    private Long keepAliveTime;
+    private Long connectionDelay;
+    private Long timeoutTime;
 }
