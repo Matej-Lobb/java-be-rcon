@@ -59,14 +59,20 @@ public class BERconClient {
     private ByteBuffer sendBuffer;
     private Boolean loggingEnabled = false;
 
+    /**
+     * Instantiates a new BattlEye Rcon client.
+     *
+     * @param beRconConfiguration the be rcon configuration
+     */
     public BERconClient(BERconConfiguration beRconConfiguration) {
         this(beRconConfiguration, null);
     }
 
     /**
-     * Instantiates a new Be rcon client.
+     * Instantiates a new BattlEye Rcon client.
      *
      * @param beRconConfiguration the be rcon configuration
+     * @param log                 the log
      */
     public BERconClient(BERconConfiguration beRconConfiguration, LogWrapper log) {
         this.beRconConfiguration = beRconConfiguration;
@@ -165,6 +171,9 @@ public class BERconClient {
         addCommandToQueue(new BECommand(BEMessageType.Command, commandBuilder.toString()));
     }
 
+    /**
+     * Disconnect.
+     */
     public void disconnect() {
         disconnect(BEDisconnectType.MANUAL);
     }
