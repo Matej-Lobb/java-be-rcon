@@ -6,9 +6,11 @@
 
     <groupId>sk.mlobb</groupId>
     <artifactId>be-rcon</artifactId>
-    <version>1.0</version>
+    <version>1.0.0</version>
 
     <name>BATTLEYE RCON LIBRARY</name>
+    <description>BattlEye Rcon Library</description>
+    <url>https://github.com/mlobb/java-be-rcon</url>
          
     <licenses>
         <license>
@@ -32,9 +34,9 @@
     </developers>
 
     <scm>
+        <url>https://github.com/mlobb/java-be-rcon</url>
         <connection>scm:git:git@github.com:mlobb/java-be-rcon.git</connection>
-        <url>https://github.com/mlobb/java-be-rcon.git</url>
-        <developerConnection>scm:git:git@github.com:mlobb/java-be-rcon.git</developerConnection>
+        <developerConnection>scm:git:ssh://git@github.com:mlobb/java-be-rcon.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
@@ -63,10 +65,12 @@
 
         <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-        <maven-scm-provider-gitexe.version>1.11.2</maven-scm-provider-gitexe.version>
+        <maven-scm-provider-gitexe.version>${maven-scm-api.version}</maven-scm-provider-gitexe.version>
         <maven-source-plugin.version>3.1.0</maven-source-plugin.version>
-        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <maven-gpg-plugin.version>1.5</maven-gpg-plugin.version>
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
+        <maven-scm-api.version>1.11.2</maven-scm-api.version>
+        <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
     </properties>
 
     <dependencies>
@@ -160,6 +164,11 @@
                         <artifactId>maven-scm-provider-gitexe</artifactId>
                         <version>${maven-scm-provider-gitexe.version}</version>
                     </dependency>
+                    <dependency>
+                        <groupId>org.apache.maven.scm</groupId>
+                        <artifactId>maven-scm-api</artifactId>
+                        <version>${maven-scm-api.version}</version>
+                    </dependency>
                 </dependencies>
             </plugin>
             <plugin>
@@ -186,13 +195,26 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
     <profiles>
         <!-- GPG Signature on release -->
         <profile>
-            <id>release-sign-artifacts</id>
+            <id>release</id>
             <activation>
                 <property>
                     <name>performRelease</name>
