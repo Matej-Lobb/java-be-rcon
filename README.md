@@ -6,6 +6,14 @@
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=mlobb_java-be-rcon&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=mlobb_java-be-rcon)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=mlobb_java-be-rcon&metric=coverage)](https://sonarcloud.io/dashboard?id=mlobb_java-be-rcon)
 
+## Dependency
+``` xml
+<dependency>
+  <groupId>sk.mlobb</groupId>
+  <artifactId>be-rcon</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
 ## Requirements
 * Java-11 or later
 
@@ -29,6 +37,7 @@ public class BERconConfiguration {
     private Long timeoutTime;
 }
 ```
+#### Details
 ```
 Keep Alive Time (KAT) 
     - Describing interval for KA messages to Rcon server.
