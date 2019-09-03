@@ -1,5 +1,8 @@
 pipeline {
   agent any
+  tools {
+    jdk "11.0.4"
+  }
   stages {
     stage('Initialize') {
       steps {
