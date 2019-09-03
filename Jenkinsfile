@@ -4,8 +4,10 @@ pipeline {
     stage('Initialize') {
       steps {
         sh '''
-          echo "PATH = ${PATH}"
-          echo "M2_HOME = ${M2_HOME}"
+          export JAVA_HOME=/usr/lib/jvm/java-11-openjdk/
+          echo "$PATH"
+          echo "$M2_HOME"
+          echo "$JAVA_HOME"
           '''
       }
     }
