@@ -5,8 +5,9 @@ pipeline {
       steps {
         sh '''
           echo "$PATH"
-          mvn -version
           java -version
+          echo $JAVA_VERSION
+          mvn -version
           '''
       }
     }
