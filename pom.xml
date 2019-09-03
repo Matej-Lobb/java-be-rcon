@@ -129,14 +129,12 @@
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
-                        <phase>verify</phase>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <id>report</id>
-                        <phase>install</phase>
+                        <id>jacoco-site</id>
                         <goals>
                             <goal>report</goal>
                         </goals>

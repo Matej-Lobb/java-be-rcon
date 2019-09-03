@@ -1,7 +1,7 @@
 # Library for BattlEye Rcon server.
 
+[![Build Status](http://116.203.153.168:8080/job/java-be-rcon/job/master/badge/icon)](http://116.203.153.168:8080/blue/organizations/jenkins/java-be-rcon/activity?branch=master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4ca219fae1c04a89924f25da3712fce5)](https://app.codacy.com/app/mlobb/java-be-rcon?utm_source=github.com&utm_medium=referral&utm_content=mlobb/java-be-rcon&utm_campaign=Badge_Grade_Dashboard)
-[![Build Status](https://travis-ci.org/mlobb/java-be-rcon.svg?branch=master)](https://travis-ci.org/mlobb/java-be-rcon)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mlobb_java-be-rcon&metric=alert_status)](https://sonarcloud.io/dashboard?id=mlobb_java-be-rcon)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=mlobb_java-be-rcon&metric=bugs)](https://sonarcloud.io/dashboard?id=mlobb_java-be-rcon)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=mlobb_java-be-rcon&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=mlobb_java-be-rcon)
