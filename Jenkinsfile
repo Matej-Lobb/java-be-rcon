@@ -1,11 +1,9 @@
 pipeline {
   agent any
-  tools {
-    jdk "11.0.4"
-  }
   stages {
     stage('Initialize') {
       steps {
+        withEnv("JAVA_HOME=/usr/lib/jvm/java-11-openjdk/bin")
         sh '''
           echo "$PATH"
           java -version
