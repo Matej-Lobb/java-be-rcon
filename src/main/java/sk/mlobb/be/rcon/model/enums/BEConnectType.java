@@ -7,15 +7,15 @@ public enum BEConnectType {
     /**
      * Failure BattlEye Rcon connect type.
      */
-    Failure(),
+    FAILURE(),
     /**
      * Success BattlEye Rcon connect type.
      */
-    Success(),
+    SUCCESS(),
     /**
      * Unknown BattlEye Rcon connect type.
      */
-    Unknown();
+    UNKNOWN();
 
     BEConnectType() {
     }
@@ -30,13 +30,13 @@ public enum BEConnectType {
         BEConnectType packetType;
         switch (byteToConvert){
             case 0x00:
-                packetType = Failure;
+                packetType = FAILURE;
                 break;
             case 0x01:
-                packetType = Success;
+                packetType = SUCCESS;
                 break;
             default:
-                packetType = Unknown;
+                packetType = UNKNOWN;
                 break;
         }
 
