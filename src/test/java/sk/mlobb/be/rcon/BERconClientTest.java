@@ -39,7 +39,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class BERconClientTest {
+public class BERconClientTest {
 
     private BERconClient beRconClient;
 
@@ -88,12 +88,12 @@ class BERconClientTest {
     }
 
     @Test
-    void shouldReceiveLoginPacketException() {
+    public void shouldReceiveLoginPacketException() {
         assertThrows(BERconException.class, () -> beRconClient.receiveLoginPacket());
     }
 
     @Test
-    void shouldReceiveLoginPacketSuccess() throws IllegalAccessException {
+    public void shouldReceiveLoginPacketSuccess() throws IllegalAccessException {
         ByteBuffer receiveBuffer = ByteBuffer.wrap(new byte[]{0,1,2,3,4,5,6,7,0x01});
         writeField(beRconClient, "receiveBuffer", receiveBuffer, true);
 
@@ -103,7 +103,7 @@ class BERconClientTest {
     }
 
     @Test
-    void shouldReceiveLoginPacketFailure() throws IOException, IllegalAccessException {
+    public void shouldReceiveLoginPacketFailure() throws IOException, IllegalAccessException {
         ByteBuffer receiveBuffer = ByteBuffer.wrap(new byte[]{0,1,2,3,4,5,6,7,0x00});
         writeField(beRconClient, "receiveBuffer", receiveBuffer, true);
 
@@ -115,7 +115,7 @@ class BERconClientTest {
     }
 
     @Test
-    void shouldReceiveLoginPacketUnknown() throws IOException, IllegalAccessException {
+    public void shouldReceiveLoginPacketUnknown() throws IOException, IllegalAccessException {
         ByteBuffer receiveBuffer = ByteBuffer.wrap(new byte[]{0,1,2,3,4,5,6,7,8,0x05});
         writeField(beRconClient, "receiveBuffer", receiveBuffer, true);
 
@@ -126,7 +126,7 @@ class BERconClientTest {
     }
 
     @Test
-    void shouldReceiveCommandPacketMessage() throws IOException {
+    public void shouldReceiveCommandPacketMessage() throws IOException {
         when(beCommand.getMessageType()).thenReturn(BEMessageType.COMMAND);
         when(datagramChannel.isConnected()).thenReturn(true);
         when(beCommand.getCommand()).thenReturn("command");
@@ -138,7 +138,7 @@ class BERconClientTest {
     }
 
     @Test
-    void shouldReceiveCommandPacket() throws IOException, IllegalAccessException {
+    public void shouldReceiveCommandPacket() throws IOException, IllegalAccessException {
         when(beCommand.getMessageType()).thenReturn(BEMessageType.COMMAND);
         when(datagramChannel.isConnected()).thenReturn(true);
         when(beCommand.getCommand()).thenReturn("command");
@@ -153,7 +153,7 @@ class BERconClientTest {
     }
 
     @Test
-    void shouldReceiveServerPacket() throws IOException {
+    public void shouldReceiveServerPacket() throws IOException {
         when(datagramChannel.isConnected()).thenReturn(true);
         when(commandQueue.poll()).thenReturn(beCommand);
         when(beCommand.getMessageType()).thenReturn(BEMessageType.COMMAND);
@@ -165,7 +165,7 @@ class BERconClientTest {
     }
 
     @Test
-    void shouldNotSendNextCommand() throws IOException {
+    public void shouldNotSendNextCommand() throws IOException {
         when(beCommand.getMessageType()).thenReturn(BEMessageType.COMMAND);
         when(datagramChannel.isConnected()).thenReturn(true);
         when(commandQueue.poll()).thenReturn(beCommand);
@@ -175,7 +175,7 @@ class BERconClientTest {
     }
 
     @Test
-    void shouldSendNextCommand() throws IOException {
+    public void shouldSendNextCommand() throws IOException {
         when(beCommand.getMessageType()).thenReturn(BEMessageType.COMMAND);
         when(datagramChannel.isConnected()).thenReturn(true);
         when(commandQueue.poll()).thenReturn(beCommand);
@@ -186,7 +186,7 @@ class BERconClientTest {
     }
 
     @Test
-    void shouldSentKeepAlive() throws IOException {
+    public void shouldSentKeepAlive() throws IOException {
         when(datagramChannel.isConnected()).thenReturn(true);
 
         beRconClient.sentKeepAlive();
@@ -195,7 +195,7 @@ class BERconClientTest {
     }
 
     @Test
-    void shouldNotDisconnect() throws IOException {
+    public void shouldNotDisconnect() throws IOException {
         doThrow(IOException.class).when(datagramChannelWrapper).close(any());
 
         beRconClient.disconnect();
@@ -204,7 +204,7 @@ class BERconClientTest {
     }
 
     @Test
-    void shouldDisconnect() throws IOException {
+    public void shouldDisconnect() throws IOException {
         beRconClient.disconnect();
 
         verify(datagramChannel).disconnect();
@@ -212,7 +212,7 @@ class BERconClientTest {
     }
 
     @Test
-    void shouldCheckTimeout() throws IOException {
+    public void shouldCheckTimeout() throws IOException {
         doNothing().when(datagramChannelWrapper).close(datagramChannel);
 
         beRconClient.checkTimeout();
@@ -221,7 +221,7 @@ class BERconClientTest {
     }
 
     @Test
-    void shouldConnect() throws IOException {
+    public void shouldConnect() throws IOException {
         when(datagramChannelWrapper.open()).thenReturn(datagramChannel);
         when(datagramChannel.connect(any())).thenReturn(datagramChannel);
         when(datagramChannel.getOption(StandardSocketOptions.SO_SNDBUF)).thenReturn(99999);
@@ -238,7 +238,7 @@ class BERconClientTest {
     }
 
     @Test
-    void shouldNotConnect() throws IOException, IllegalAccessException {
+    public void shouldNotConnect() throws IOException, IllegalAccessException {
         Thread receiveThread = mock(Thread.class);
 
         writeField(beRconClient, "receiveThread", receiveThread, true);
@@ -252,19 +252,19 @@ class BERconClientTest {
     }
 
     @Test
-    void shouldSendCommandString() {
+    public void shouldSendCommandString() {
         beRconClient.sendCommand("test command");
         verify(commandQueue).add(any());
     }
 
     @Test
-    void shouldSendCommandNoArgs() {
+    public void shouldSendCommandNoArgs() {
         beRconClient.sendCommand(DayzBECommandType.EMPTY);
         verify(commandQueue).add(any());
     }
 
     @Test
-    void shouldSendCommandArgs() {
+    public void shouldSendCommandArgs() {
         beRconClient.sendCommand(DayzBECommandType.EMPTY, "arg1", "arg2");
         verify(commandQueue).add(any());
     }
