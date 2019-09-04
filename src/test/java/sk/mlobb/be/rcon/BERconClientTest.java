@@ -46,7 +46,6 @@ class BERconClientTest {
         when(datagramChannel.isConnected()).thenReturn(true);
         when(datagramChannel.write((ByteBuffer) any())).thenReturn(1);
         when(configuration.getConnectionDelay()).thenReturn(1L);
-        when(datagramChannel.read((ByteBuffer) any())).thenReturn(7);
 
         beRconClient.connect(beLoginCredential);
 
