@@ -46,8 +46,8 @@
     </issueManagement>
 
     <ciManagement>
-        <system>travis-ci</system>
-        <url>https://travis-ci.org/mlobb/java-be-rcon</url>
+        <system>jenkins</system>
+        <url>https://jenkins.mlobb.sk/blue/organizations/jenkins/java-be-rcon/activity</url>
     </ciManagement>
 
     <properties>
