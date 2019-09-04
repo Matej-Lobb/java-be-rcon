@@ -7,19 +7,19 @@ public enum BEMessageType {
     /**
      * Login be message type.
      */
-    Login((byte) 0x00),
+    LOGIN((byte) 0x00),
     /**
      * Command be message type.
      */
-    Command((byte) 0x01),
+    COMMAND((byte) 0x01),
     /**
      * Server be message type.
      */
-    Server((byte) 0x02),
+    SERVER((byte) 0x02),
     /**
      * Unknown be message type.
      */
-    Unknown((byte) 0xFF);
+    UNKNOWN((byte) 0xFF);
 
     private final byte type;
 
@@ -37,16 +37,16 @@ public enum BEMessageType {
         BEMessageType packetType;
         switch (byteToConvert){
             case 0x00:
-                packetType = Login;
+                packetType = LOGIN;
                 break;
             case 0x01:
-                packetType = Command;
+                packetType = COMMAND;
                 break;
             case 0x02:
-                packetType = Server;
+                packetType = SERVER;
                 break;
             default:
-                packetType = Unknown;
+                packetType = UNKNOWN;
                 break;
         }
 
