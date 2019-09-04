@@ -17,4 +17,14 @@ public class DatagramChannelWrapper {
     public DatagramChannel open() throws IOException {
         return DatagramChannel.open();
     }
+
+    /**
+     * Close.
+     *
+     * @param datagramChannel the datagram channel
+     * @throws IOException the io exception
+     */
+    public void close(DatagramChannel datagramChannel) throws IOException {
+        datagramChannel.close();
+    }
 }

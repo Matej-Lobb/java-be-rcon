@@ -3,7 +3,6 @@ package sk.mlobb.be.rcon.model.configuration;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * The type BattlEye Rcon configuration.
