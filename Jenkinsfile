@@ -16,12 +16,12 @@ pipeline {
     }
     stage('Build') {
       steps {
-        sh 'mvn clean install'
+        sh 'mvn clean install jacoco:report'
       }
     }
     stage('Sonar') {
       steps {
-        sh 'mvn sonar:sonar -Pcoverage -Dsonar.host.url=http://116.203.153.168:8500'
+        sh 'mvn sonar:sonar -Dsonar.host.url=http://116.203.153.168:8500'
       }
     }
   }
