@@ -1,11 +1,13 @@
 # Library for BattlEye Rcon server.
 
-[![Build Status](http://116.203.153.168:8080/job/java-be-rcon/job/master/badge/icon)](http://116.203.153.168:8080/blue/organizations/jenkins/java-be-rcon/activity?branch=master)
+[![Build Status](https://jenkins.mlobb.sk/job/java-be-rcon/job/master/badge/icon)](https://jenkins.mlobb.sk/blue/organizations/jenkins/java-be-rcon/activity?branch=master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4ca219fae1c04a89924f25da3712fce5)](https://app.codacy.com/app/mlobb/java-be-rcon?utm_source=github.com&utm_medium=referral&utm_content=mlobb/java-be-rcon&utm_campaign=Badge_Grade_Dashboard)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mlobb_java-be-rcon&metric=alert_status)](https://sonarcloud.io/dashboard?id=mlobb_java-be-rcon)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=mlobb_java-be-rcon&metric=bugs)](https://sonarcloud.io/dashboard?id=mlobb_java-be-rcon)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=mlobb_java-be-rcon&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=mlobb_java-be-rcon)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=mlobb_java-be-rcon&metric=coverage)](https://sonarcloud.io/dashboard?id=mlobb_java-be-rcon)
+[![Quality Gate Status](https://sonar.mlobb.sk/api/project_badges/measure?project=sk.mlobb:be-rcon&metric=alert_status)](https://sonar.mlobb.sk/dashboard?id=sk.mlobb%3Abe-rcon)
+[![Bugs](https://sonar.mlobb.sk/api/project_badges/measure?project=sk.mlobb:be-rcon&metric=bugs)](https://sonar.mlobb.sk/dashboard?id=sk.mlobb%3Abe-rcon)
+[![Vulnerabilities](https://sonar.mlobb.sk/api/project_badges/measure?project=sk.mlobb:be-rcon&metric=vulnerabilities)](https://sonar.mlobb.sk/dashboard?id=sk.mlobb%3Abe-rcon)
+[![Coverage](https://sonar.mlobb.sk/api/project_badges/measure?project=sk.mlobb:be-rcon&metric=coverage)](https://sonar.mlobb.sk/dashboard?id=sk.mlobb%3Abe-rcon)
+
+[![Release](https://img.shields.io/github/v/release/mlobb/java-be-rcon)](https://github.com/mlobb/java-be-rcon/releases)
 
 ## Dependency
 ``` xml
