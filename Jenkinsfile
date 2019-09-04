@@ -21,7 +21,7 @@ pipeline {
     }
     stage('Sonar') {
       steps {
-        sh 'mvn sonar:sonar -Dsonar.host.url=http://116.203.153.168:8500'
+        sh 'mvn sonar:sonar -Dsonar.host.url=https://sonar.mlobb.sk'
       }
     }
   }
