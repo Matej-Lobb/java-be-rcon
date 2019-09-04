@@ -75,9 +75,11 @@ public class BERconClient {
      * @param log                 the log
      */
     public BERconClient(BERconConfiguration beRconConfiguration, LogWrapper log) {
+        logIfEnabled("Initializing client", LoggingLevel.DEBUG);
         this.beRconConfiguration = beRconConfiguration;
         this.log = log;
         if (log != null) {
+            logIfEnabled(String.format("Using logger: %s", log), LoggingLevel.DEBUG);
             loggingEnabled = true;
         }
         crc32 = new CRC32();
@@ -98,7 +100,7 @@ public class BERconClient {
      * @throws IOException the io exception
      */
     public void connect(BELoginCredential beLoginCredential) throws IOException {
-        logIfEnabled("Connecting to Rcon ...", LoggingLevel.INFO);
+        logIfEnabled("Connecting to BE Rcon ...", LoggingLevel.INFO);
         datagramChannel = datagramChannelWrapper.open();
         datagramChannel.connect(beLoginCredential.getHostAddress());
         logIfEnabled("Datagram connected ...", LoggingLevel.DEBUG);
@@ -240,7 +242,7 @@ public class BERconClient {
         }
     }
 
-    void sendNextCommand() {
+    protected void sendNextCommand() {
         logIfEnabled("Sending next command ...", LoggingLevel.DEBUG);
         if (commandQueue != null && !commandQueue.isEmpty()) {
             final BECommand beCommand = commandQueue.poll();
@@ -440,14 +442,14 @@ public class BERconClient {
         };
     }
 
-    void checkTimeout() {
+    protected void checkTimeout() {
         logIfEnabled("Checking timeout ...", LoggingLevel.DEBUG);
         if (lastSentTime.get() - lastReceivedTime.get() > beRconConfiguration.getTimeoutTime()) {
             disconnect(BEDisconnectType.CONNECTION_LOST);
         }
     }
 
-    void sentKeepAlive() {
+    protected void sentKeepAlive() {
         logIfEnabled("Check if keep alive is needed ...", LoggingLevel.DEBUG);
         if (System.currentTimeMillis() - lastSentTime.get() >= beRconConfiguration.getKeepAliveTime()) {
             constructPacket(BEMessageType.COMMAND, nextSequenceNumber(), null);

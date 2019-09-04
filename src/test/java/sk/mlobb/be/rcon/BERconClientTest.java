@@ -176,11 +176,23 @@ class BERconClientTest {
     }
 
     private static class TestLogImpl implements LogWrapper {
-        public void debug(String msg) { }
-        public void debug(String msg, Throwable t) { }
-        public void info(String msg) { }
-        public void info(String msg, Throwable t) { }
-        public void warn(String msg) { }
-        public void warn(String msg, Throwable t) { }
+        public void debug(String msg) {
+            System.out.println(msg);
+        }
+        public void debug(String msg, Throwable t) {
+            System.out.println(msg);
+        }
+        public void info(String msg) {
+            System.out.println(msg);
+        }
+        public void info(String msg, Throwable t) {
+            System.out.println(msg);
+        }
+        public void warn(String msg) {
+            System.out.println(msg);
+        }
+        public void warn(String msg, Throwable t) {
+            System.out.println(msg);
+        }
     }
 }
