@@ -347,10 +347,10 @@ public class BERconClient {
                             case UNKNOWN:
                                 logIfEnabled("Received unknown packet!", LoggingLevel.WARNING);
                                 break;
-                            default: {
+                            default:
                                 logIfEnabled("Unknown packet", LoggingLevel.WARNING);
                                 break;
-                            }
+
                         }
                     }
                 }
@@ -360,7 +360,7 @@ public class BERconClient {
         };
     }
 
-    private void receiveServerPacket() {
+    protected void receiveServerPacket() {
         byte serverSequenceNumber = receiveBuffer.get();
         fireResponseEvent(new String(receiveBuffer.array(), receiveBuffer.position(), receiveBuffer.remaining()));
         constructPacket(BEMessageType.SERVER, serverSequenceNumber, null);
@@ -368,7 +368,7 @@ public class BERconClient {
         sendNextCommand();
     }
 
-    private void receiveCommandPacket() throws IOException {
+    protected void receiveCommandPacket() throws IOException {
         receiveBuffer.get();
         if (receiveBuffer.hasRemaining()) {
             if (receiveBuffer.get() == 0x00) {
@@ -399,7 +399,7 @@ public class BERconClient {
         }
     }
 
-    private void receiveLoginPacket() {
+    protected void receiveLoginPacket() {
         try {
             BEConnectType connectionResult = BEConnectType.convertByteToConnectType(receiveBuffer.array()[8]);
             switch (connectionResult) {
@@ -411,12 +411,10 @@ public class BERconClient {
                     fireConnectionConnectedEvent(BEConnectType.SUCCESS);
                     connected.set(true);
                     break;
-                case UNKNOWN:
+                default:
+                    log.warn("Unknown login packet received!");
                     fireConnectionConnectedEvent(BEConnectType.UNKNOWN);
                     disconnect(BEDisconnectType.SOCKET_EXCEPTION);
-                    break;
-                default:
-                    logIfEnabled("Invalid connection result!", LoggingLevel.WARNING);
                     break;
             }
         } catch (Exception e) {
@@ -465,18 +463,17 @@ public class BERconClient {
     private void logIfEnabled(String message, LoggingLevel level, Throwable throwable) {
         if (loggingEnabled) {
             switch (level) {
-                case DEBUG: {
-                    debugLog(message, throwable);
+                case DEBUG:
+                    debugLog(message);
                     break;
-                }
-                case INFO: {
-                    infoLog(message, throwable);
+                case INFO:
+                    infoLog(message);
                     break;
-                }
-                case WARNING: {
+                case WARNING:
                     warnLog(message, throwable);
                     break;
-                }
+                default:
+                    break;
             }
         }
     }
@@ -489,19 +486,11 @@ public class BERconClient {
         log.warn(message, throwable);
     }
 
-    private void infoLog(String message, Throwable throwable) {
-        if (throwable == null) {
-            log.info(message);
-            return;
-        }
-        log.info(message, throwable);
+    private void infoLog(String message) {
+        log.info(message);
     }
 
-    private void debugLog(String message, Throwable throwable) {
-        if (throwable == null) {
-            log.debug(message);
-            return;
-        }
-        log.debug(message, throwable);
+    private void debugLog(String message) {
+        log.debug(message);
     }
 }
