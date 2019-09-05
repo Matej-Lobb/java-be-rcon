@@ -4,19 +4,23 @@ pipeline {
     maven 'Maven 3.6.1' 
   }
   stages {
-    stage('Initialize') {
+    stage('Pipeline Initialize') {
       steps {
         sh '''
-          echo "$PATH"
           java -version
           echo $JAVA_VERSION
           mvn -version
+          echo $M2_HOME
+          echo $MAVEN_HOME
+          echo "$PATH"
           '''
       }
     }
-    stage('Build') {
+    stage('Build and Test') {
       steps {
-        sh 'mvn clean install jacoco:report'
+        sh 'mvn clean compile'
+        sh 'mvn install jacoco:report'
+
       }
     }
     stage('Sonar') {
