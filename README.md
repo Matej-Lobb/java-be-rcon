@@ -1,6 +1,6 @@
 # Library for BattlEye Rcon server.
 
-[![Build Status](https://jenkins.mlobb.sk/job/java-be-rcon/job/master/badge/icon)](https://jenkins.mlobb.sk/blue/organizations/jenkins/java-be-rcon/activity?branch=master)
+[![Build Status](https://jenkins.mlobb.sk/job/java-be-rcon/job/develop/badge/icon)](https://jenkins.mlobb.sk/blue/organizations/jenkins/java-be-rcon/activity?branch=master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/7eb70724c3b94dca82fc9a69c66e6c1b)](https://www.codacy.com/manual/mlobb/java-be-rcon?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mlobb/java-be-rcon&amp;utm_campaign=Badge_Grade)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4ca219fae1c04a89924f25da3712fce5)](https://app.codacy.com/app/mlobb/java-be-rcon?utm_source=github.com&utm_medium=referral&utm_content=mlobb/java-be-rcon&utm_campaign=Badge_Grade_Dashboard)
 [![Quality Gate Status](https://sonar.mlobb.sk/api/project_badges/measure?project=sk.mlobb:be-rcon&metric=alert_status)](https://sonar.mlobb.sk/dashboard?id=sk.mlobb%3Abe-rcon)
@@ -115,4 +115,4 @@ BattlEye Rcon Library (c) Matej Lobb. All Rights Reserved.
 Permission to modify and redistribute is granted under the terms of the 
 [Apache License 2.0] [license-url]
 
-  [license-url]: https://github.com/DependencyTrack/dependency-track/blob/master/LICENSE.txt
+  [license-url]: https://github.com/DependencyTrack/dependency-track/blob/develop/LICENSE.txt
