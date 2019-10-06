@@ -1,11 +1,5 @@
 pipeline {
   agent any
-  tools { 
-    maven 'Maven 3.6.1' 
-  }
-  environment {
-    CODACY_PROJECT_TOKEN = '231d4bacc62d4b8da5e4b45526b5e0e7'
-  }
   stages {
     stage('Pipeline Initialize') {
       steps {
@@ -23,7 +17,6 @@ pipeline {
       steps {
         sh 'mvn clean compile'
         sh 'mvn install jacoco:report'
-
       }
     }
     stage('Sonar') {
@@ -36,9 +29,15 @@ pipeline {
         sh '''
         wget -O codacy-coverage-reporter https://github.com/codacy/codacy-coverage-reporter/releases/download/6.0.4/codacy-coverage-reporter-linux-6.0.4
         chmod +x codacy-coverage-reporter
-        ./codacy-coverage-reporter report -l Java -r dayz-server-manager-boot/target/site/jacoco-aggregate/jacoco.xml
+        ./codacy-coverage-reporter report -l Java -r target/site/jacoco/jacoco.xml
         '''
       }
     }
+  }
+  tools {
+    maven 'Maven 3.6.1'
+  }
+  environment {
+    CODACY_PROJECT_TOKEN = '231d4bacc62d4b8da5e4b45526b5e0e7'
   }
 }
