@@ -1,7 +1,7 @@
 pipeline {
   agent any
   stages {
-    stage('Pipeline Initialize') {
+    stage('Initialize') {
       steps {
         sh '''
           java -version
