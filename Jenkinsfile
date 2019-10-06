@@ -3,6 +3,9 @@ pipeline {
   tools { 
     maven 'Maven 3.6.1' 
   }
+  environment {
+    CODACY_PROJECT_TOKEN = '231d4bacc62d4b8da5e4b45526b5e0e7'
+  }
   stages {
     stage('Pipeline Initialize') {
       steps {
