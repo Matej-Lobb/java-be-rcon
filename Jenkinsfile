@@ -28,5 +28,14 @@ pipeline {
         sh 'mvn sonar:sonar -Dsonar.host.url=https://sonar.mlobb.sk'
       }
     }
+    stage('Codacy') {
+      steps {
+        sh '''
+        wget -O codacy-coverage-reporter https://github.com/codacy/codacy-coverage-reporter/releases/download/6.0.4/codacy-coverage-reporter-linux-6.0.4
+        chmod +x codacy-coverage-reporter
+        ./codacy-coverage-reporter report -l Java -r dayz-server-manager-boot/target/site/jacoco-aggregate/jacoco.xml
+        '''
+      }
+    }
   }
 }
