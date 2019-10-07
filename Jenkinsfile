@@ -33,11 +33,17 @@ pipeline {
         '''
       }
     }
+    stage('Codecov') {
+      steps {
+        sh 'curl -s https://codecov.io/bash | bash -s'
+      }
+    }
   }
   tools {
     maven 'Maven 3.6.1'
   }
   environment {
     CODACY_PROJECT_TOKEN = '231d4bacc62d4b8da5e4b45526b5e0e7'
+    CODECOV_TOKEN = '76a68c87-a2e7-4cc9-937f-8b28459ae43c'
   }
 }
