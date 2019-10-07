@@ -6,6 +6,7 @@
 [![Bugs](https://sonar.mlobb.sk/api/project_badges/measure?project=sk.mlobb:be-rcon&metric=bugs)](https://sonar.mlobb.sk/dashboard?id=sk.mlobb%3Abe-rcon)
 [![Vulnerabilities](https://sonar.mlobb.sk/api/project_badges/measure?project=sk.mlobb:be-rcon&metric=vulnerabilities)](https://sonar.mlobb.sk/dashboard?id=sk.mlobb%3Abe-rcon)
 [![Coverage](https://sonar.mlobb.sk/api/project_badges/measure?project=sk.mlobb:be-rcon&metric=coverage)](https://sonar.mlobb.sk/dashboard?id=sk.mlobb%3Abe-rcon)
+[![codecov](https://codecov.io/gh/mlobb/java-be-rcon/branch/develop/graph/badge.svg)](https://codecov.io/gh/mlobb/java-be-rcon)
 [![Release](https://img.shields.io/github/v/release/mlobb/java-be-rcon)](https://github.com/mlobb/java-be-rcon/releases)
 
 ## Dependency
