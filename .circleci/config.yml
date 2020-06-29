@@ -6,7 +6,8 @@ jobs:
       - image: circleci/openjdk:11-jdk
     steps:
       - checkout
-      - run: mvn clean install
+      - run: mvn clean compile
+      - run: mvn install jacoco:report
       - store_artifacts:
           path: target/be-rcon-1.2.0-SNAPSHOT.jar
       - run:
@@ -15,6 +16,12 @@ jobs:
       - run:
           name: Analyze on Codecov
           command: curl -s https://codecov.io/bash | bash -s
+      - run:
+          name: Analyze on Codacy
+          command:
+            wget -O codacy-coverage-reporter https://github.com/codacy/codacy-coverage-reporter/releases/download/6.0.4/codacy-coverage-reporter-linux-6.0.4
+            chmod +x codacy-coverage-reporter
+            ./codacy-coverage-reporter report -l Java -r target/site/jacoco/jacoco.xml
 
 workflows:
   main:
