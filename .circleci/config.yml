@@ -11,7 +11,7 @@ jobs:
           name: Analyze on SonarCloud
           command: mvn verify sonar:sonar
       - store_artifacts:
-          path: target/java-be-rcon-*.jar  
+          path: target/*.jar  
 
 workflows:
   main:
