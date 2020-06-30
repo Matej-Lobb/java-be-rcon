@@ -1,6 +1,6 @@
 # Library for BattlEye Rcon server.
 
-[![Build Status](https://circleci.com/gh/mlobb/java-be-rcon.svg?style=svg)](https://circleci.com/gh/mlobb/java-be-rcon)
+[![Build Status](https://circleci.com/gh/Matej-Lobb/java-be-rcon.svg?style=svg)](https://circleci.com/gh/Matej-Lobb/java-be-rcon)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mlobb_java-be-rcon&metric=alert_status)](https://sonarcloud.io/dashboard?id=mlobb_java-be-rcon)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=mlobb_java-be-rcon&metric=bugs)](https://sonarcloud.io/dashboard?id=mlobb_java-be-rcon)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=mlobb_java-be-rcon&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=mlobb_java-be-rcon)
