@@ -5,7 +5,6 @@
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=mlobb_java-be-rcon&metric=bugs)](https://sonarcloud.io/dashboard?id=mlobb_java-be-rcon)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=mlobb_java-be-rcon&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=mlobb_java-be-rcon)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=mlobb_java-be-rcon&metric=coverage)](https://sonarcloud.io/dashboard?id=mlobb_java-be-rcon)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4ca219fae1c04a89924f25da3712fce5)](https://app.codacy.com/app/mlobb/java-be-rcon?utm_source=github.com&utm_medium=referral&utm_content=mlobb/java-be-rcon&utm_campaign=Badge_Grade_Dashboard)
 [![codecov](https://codecov.io/gh/mlobb/java-be-rcon/branch/develop/graph/badge.svg)](https://codecov.io/gh/mlobb/java-be-rcon)
 [![Release](https://img.shields.io/github/v/release/mlobb/java-be-rcon)](https://github.com/mlobb/java-be-rcon/releases)
 
