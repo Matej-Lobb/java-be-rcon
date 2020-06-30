@@ -16,7 +16,7 @@
 </dependency>
 ```
 ## Requirements
-* Java-11 or later
+* Java-14 or later
 
 ## Informations
 * This Library provide implementation for BattlEye RCON protocol
