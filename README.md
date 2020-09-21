@@ -6,6 +6,7 @@
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=mlobb_java-be-rcon&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=mlobb_java-be-rcon)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=mlobb_java-be-rcon&metric=coverage)](https://sonarcloud.io/dashboard?id=mlobb_java-be-rcon)
 [![Release](https://img.shields.io/github/v/release/mlobb/java-be-rcon)](https://github.com/mlobb/java-be-rcon/releases)
+[![CodeFactor](https://www.codefactor.io/repository/github/matej-lobb/java-be-rcon/badge)](https://www.codefactor.io/repository/github/matej-lobb/java-be-rcon)
 
 ## Dependency
 ``` xml
